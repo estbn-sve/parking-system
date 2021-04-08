@@ -19,6 +19,10 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    public boolean checkFidelity (Ticket ticket) {
+        return false;
+    }
+
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         try {
