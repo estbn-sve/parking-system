@@ -15,24 +15,25 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
-//@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class FareCalculatorServiceTest {
 
-    //@Mock
-    //private static TicketDAO ticketDAO;
-    //@InjectMocks
+
+    @Mock
+    private static TicketDAO ticketDAO;
+    @InjectMocks
     private static FareCalculatorService fareCalculatorService;
     private Ticket ticket;
 
     @BeforeAll
     private static void setUp() {
         fareCalculatorService = new FareCalculatorService();
-        //ticketDAO = new TicketDAO();
+        ticketDAO = new TicketDAO();
     }
 
     @BeforeEach
@@ -64,7 +65,6 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        //when(ticketDAO.checkFidelity(any())).thenReturn(true);
         fareCalculatorService.calculateFare(ticket);
         assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
     }
@@ -105,6 +105,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity()).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
@@ -119,6 +120,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity()).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
@@ -133,8 +135,23 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity()).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
 
+    @Test
+    public void calculateFareCarWithFidelityCheck(){
+        Date inTime = new Date();
+        Date outTime = new Date(inTime.getTime());
+        inTime.setTime(System.currentTimeMillis()-(60 * 60 * 1000));
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity()).thenReturn(true);
+        fareCalculatorService.calculateFare(ticket);
+        assertEquals((0.95 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
+    }
 }
