@@ -8,20 +8,13 @@ import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 
 public class TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
-
-    public boolean checkFidelity (Ticket ticket) {
-        return false;
-    }
 
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
@@ -86,6 +79,31 @@ public class TicketDAO {
         }catch (Exception ex){
             logger.error("Error saving ticket info",ex);
         }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
+
+
+    public boolean checkFidelity() {
+        // Si je met en argument Ticket ticket j'ai des erreurs comment faire.
+        Ticket ticket;
+        ticket = new Ticket();
+        Connection con = null;
+        ResultSet resultSql = null;
+        //return false;
+        try {
+            con = dataBaseConfig.getConnection();
+            String where = ticket.getVehicleRegNumber();
+            String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ where;
+            Statement stmt = con.createStatement();
+            resultSql = stmt.executeQuery(request);
+            if (resultSql != null) {
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error("Error saving ticket info",ex);
+        } finally {
             dataBaseConfig.closeConnection(con);
         }
         return false;
