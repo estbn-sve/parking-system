@@ -85,17 +85,15 @@ public class TicketDAO {
     }
 
 
-    public boolean checkFidelity() {
+    public boolean checkFidelity(Ticket ticket) {
         // Si je met en argument Ticket ticket j'ai des erreurs comment faire.
-        Ticket ticket;
-        ticket = new Ticket();
         Connection con = null;
         ResultSet resultSql = null;
         //return false;
         try {
             con = dataBaseConfig.getConnection();
-            String where = ticket.getVehicleRegNumber();
-            String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ where;
+            String vehicleRegNumber = ticket.getVehicleRegNumber();
+            String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ vehicleRegNumber;
             Statement stmt = con.createStatement();
             resultSql = stmt.executeQuery(request);
             if (resultSql != null) {
