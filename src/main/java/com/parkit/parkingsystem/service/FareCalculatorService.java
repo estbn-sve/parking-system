@@ -26,7 +26,7 @@ public class FareCalculatorService {
         } else if (duration> 0.5){
             duration = duration - 0.5;
         }
-        if (ticketDAO.checkFidelity()) {
+        if (ticketDAO.checkFidelity(ticket)) {
             duration = duration * 0.95;
         }
         switch (ticket.getParkingSpot().getParkingType()){

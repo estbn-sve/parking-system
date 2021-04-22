@@ -107,7 +107,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity()).thenReturn(false);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.75 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
