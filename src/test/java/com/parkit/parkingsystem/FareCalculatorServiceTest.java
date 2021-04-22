@@ -53,6 +53,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR);
     }
@@ -67,6 +68,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR);
     }
@@ -81,6 +83,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
@@ -94,6 +97,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
@@ -122,7 +126,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity()).thenReturn(false);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals( (0.75 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
@@ -137,7 +141,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity()).thenReturn(false);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         //-0.5 multiplicateur des heures éronner avec la prise en compte des 30 minutes gratuit
         assertEquals( (23.5 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
@@ -153,7 +157,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity()).thenReturn(true);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(true);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.95 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
     }
@@ -168,7 +172,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity()).thenReturn(true);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(true);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.95 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice());
     }
@@ -182,6 +186,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
     }
@@ -195,6 +200,7 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
+        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.5 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
     }

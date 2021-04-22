@@ -21,10 +21,8 @@ public class FareCalculatorService {
         double outHour = ticket.getOutTime().getTime();
         double inHour = ticket.getInTime().getTime();
         double duration = (outHour - inHour)/3600000;
-        if (duration <= 0.5){
+        if (duration <= 0.5) {
             duration = 0;
-        } else if (duration> 0.5){
-            duration = duration - 0.5;
         }
         if (ticketDAO.checkFidelity(ticket)) {
             duration = duration * 0.95;
