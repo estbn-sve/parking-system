@@ -86,10 +86,8 @@ public class TicketDAO {
 
 
     public boolean checkFidelity(Ticket ticket) {
-        // Si je met en argument Ticket ticket j'ai des erreurs comment faire.
         Connection con = null;
         ResultSet resultSql = null;
-        //return false;
         try {
             con = dataBaseConfig.getConnection();
             String vehicleRegNumber = ticket.getVehicleRegNumber();
@@ -100,7 +98,7 @@ public class TicketDAO {
                 return true;
             }
         } catch (Exception ex) {
-            logger.error("Error saving ticket info",ex);
+            logger.error("Error check ticket fidelity",ex);
         } finally {
             dataBaseConfig.closeConnection(con);
         }
