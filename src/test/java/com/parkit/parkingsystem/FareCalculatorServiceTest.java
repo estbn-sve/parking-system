@@ -41,7 +41,6 @@ public class FareCalculatorServiceTest {
         ticket = new Ticket();
     }
 
-    // Pour que toutes les tests fonctionnent j'ai changer l'heure de sortie et y est ajouté 30 minutes pour ne pas prendre en compte la boucle des 30 minutes gratuites.
 
     @Test
     public void calculateFareCar(){
@@ -90,14 +89,14 @@ public class FareCalculatorServiceTest {
     @Test
     public void calculateFareBikeWithFutureInTime(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() + (  60 * 60 * 1000) );
+        inTime.setTime( System.currentTimeMillis() + (60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
 
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
+        //when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
     }
 
@@ -188,19 +187,5 @@ public class FareCalculatorServiceTest {
         when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
-    }
-
-    @Test
-    public void calculateFareCarWithFreeHalfHourMoreHalfHour(){
-        Date inTime = new Date();
-        Date outTime = new Date(inTime.getTime());
-        inTime.setTime(System.currentTimeMillis()-(60 * 60 * 1000));
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-        when(ticketDAO.checkFidelity(ticket)).thenReturn(false);
-        fareCalculatorService.calculateFare(ticket);
-        assertEquals((0.5 * Fare.CAR_RATE_PER_HOUR), ticket.getPrice());
     }
 }
