@@ -82,7 +82,7 @@ public class ParkingDataBaseIT {
         assertNotNull(ticket);
         assertNotNull(ticket.getInTime());
         assertEquals(ticket.getOutTime().getTime(), new Date().getTime(), 500);
-        assertNotNull(ticket.getPrice());
+        assertNotEquals(0, ticket.getPrice());
         int parkingAvailableSlot = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
         assertEquals(1, parkingAvailableSlot);
     }
