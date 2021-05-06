@@ -8,10 +8,7 @@ import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 
 public class TicketDAO {
 
@@ -82,6 +79,27 @@ public class TicketDAO {
         }catch (Exception ex){
             logger.error("Error saving ticket info",ex);
         }finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return false;
+    }
+
+
+    public boolean checkFidelity(Ticket ticket) {
+        Connection con = null;
+        ResultSet resultSql = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            String vehicleRegNumber = ticket.getVehicleRegNumber();
+            String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ vehicleRegNumber;
+            Statement stmt = con.createStatement();
+            resultSql = stmt.executeQuery(request);
+            if (resultSql != null) {
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error("Error check ticket fidelity",ex);
+        } finally {
             dataBaseConfig.closeConnection(con);
         }
         return false;

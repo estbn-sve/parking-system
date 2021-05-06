@@ -1,21 +1,32 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.Ticket;
 
+import java.util.Date;
+
+
 public class FareCalculatorService {
+    private TicketDAO ticketDAO;
+
+    public FareCalculatorService() {
+        ticketDAO = new TicketDAO();
+    }
 
     public void calculateFare(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
-
-        int inHour = ticket.getInTime().getHours();
-        int outHour = ticket.getOutTime().getHours();
-
-        //TODO: Some tests are failing here. Need to check if this logic is correct
-        int duration = outHour - inHour;
-
+        double outHour = ticket.getOutTime().getTime();
+        double inHour = ticket.getInTime().getTime();
+        double duration = (outHour - inHour)/3600000;
+        if (duration <= 0.5) {
+            duration = 0;
+        }
+        if (ticketDAO.checkFidelity(ticket)) {
+            duration = duration * 0.95;
+        }
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
                 ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
@@ -27,5 +38,9 @@ public class FareCalculatorService {
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
+    }
+
+    public void test(String req, int resp){
+
     }
 }
