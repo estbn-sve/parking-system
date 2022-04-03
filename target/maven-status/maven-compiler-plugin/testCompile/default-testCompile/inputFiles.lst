@@ -1,6 +1,5 @@
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\ParkingServiceTest.java
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\DataBasePrepareService.java
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\FareCalculatorServiceTest.java
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\ParkingDataBaseIT.java
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\config\DataBaseTestConfig.java
-C:\Users\Estbn\IdeaProjects\parkingsystem\src\test\java\com\parkit\parkingsystem\TicketDAOTest.java
+J:\IdeaProjects\parking-system\src\test\java\com\parkit\parkingsystem\FareCalculatorServiceTest.java
+J:\IdeaProjects\parking-system\src\test\java\com\parkit\parkingsystem\integration\ParkingDataBaseIT.java
+J:\IdeaProjects\parking-system\src\test\java\com\parkit\parkingsystem\integration\config\DataBaseTestConfig.java
+J:\IdeaProjects\parking-system\src\test\java\com\parkit\parkingsystem\integration\service\DataBasePrepareService.java
+J:\IdeaProjects\parking-system\src\test\java\com\parkit\parkingsystem\ParkingServiceTest.java
