@@ -89,10 +89,10 @@ import java.sql.*;
 <span class="fc" id="L89">        Connection con = null;</span>
 <span class="fc" id="L90">        ResultSet resultSql = null;</span>
         try {
-<span class="fc" id="L92">            con = dataBaseConfig.getConnection();</span>
-<span class="fc" id="L93">            String vehicleRegNumber = ticket.getVehicleRegNumber();</span>
-<span class="fc" id="L94">            String request = &quot;SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = &quot;+ vehicleRegNumber;</span>
-<span class="fc" id="L95">            Statement stmt = con.createStatement();</span>
+<span class="nc" id="L92">            con = dataBaseConfig.getConnection();</span>
+<span class="nc" id="L93">            String vehicleRegNumber = ticket.getVehicleRegNumber();</span>
+<span class="nc" id="L94">            String request = &quot;SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = &quot;+ vehicleRegNumber;</span>
+<span class="nc" id="L95">            Statement stmt = con.createStatement();</span>
 <span class="nc" id="L96">            resultSql = stmt.executeQuery(request);</span>
 <span class="nc bnc" id="L97" title="All 2 branches missed.">            if (resultSql != null) {</span>
 <span class="nc" id="L98">                return true;</span>
@@ -105,4 +105,4 @@ import java.sql.*;
 <span class="fc" id="L105">        return false;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
