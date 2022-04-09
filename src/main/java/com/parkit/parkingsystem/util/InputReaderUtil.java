@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Scanner;
 
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings("DM_DEFAULT_ENCODING")
 public class InputReaderUtil {
 
     private static Scanner scan = new Scanner(System.in);

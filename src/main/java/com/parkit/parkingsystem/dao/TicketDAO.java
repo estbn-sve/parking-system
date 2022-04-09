@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,36 +17,42 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
-    public boolean saveTicket(Ticket ticket){
+    @SuppressFBWarnings("DLS_DEAD_LOCAL_STORE")
+    public boolean saveTicket(Ticket ticket) throws SQLException {
         Connection con = null;
+        PreparedStatement ps =null;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
-            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            //ps.setInt(1,ticket.getId());
+            ps = con.prepareStatement(DBConstants.SAVE_TICKET);
             ps.setInt(1,ticket.getParkingSpot().getId());
             ps.setString(2, ticket.getVehicleRegNumber());
             ps.setDouble(3, ticket.getPrice());
             ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
-            ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
+            ps.setTimestamp(5,(ticket.getOutTime()==null)?null:(new Timestamp(ticket.getOutTime().getTime())));
             return ps.execute();
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
+            if (ps != null) {
+                ps.close();
+            }
             dataBaseConfig.closeConnection(con);
             return false;
         }
     }
 
-    public Ticket getTicket(String vehicleRegNumber) {
+    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE")
+    public Ticket getTicket(String vehicleRegNumber) throws SQLException {
         Connection con = null;
         Ticket ticket = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
-            //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
+            ps = con.prepareStatement(DBConstants.GET_TICKET);
             ps.setString(1,vehicleRegNumber);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             if(rs.next()){
                 ticket = new Ticket();
                 ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)),false);
@@ -61,16 +68,21 @@ public class TicketDAO {
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
+            assert rs != null;
+            assert ps != null;
+            rs.close();
+            ps.close();
             dataBaseConfig.closeConnection(con);
             return ticket;
         }
     }
 
-    public boolean updateTicket(Ticket ticket) {
+    public boolean updateTicket(Ticket ticket) throws SQLException {
         Connection con = null;
+        PreparedStatement ps = null;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+            ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
             ps.setInt(3,ticket.getId());
@@ -79,27 +91,36 @@ public class TicketDAO {
         }catch (Exception ex){
             logger.error("Error saving ticket info",ex);
         }finally {
+            assert ps != null;
+            ps.close();
             dataBaseConfig.closeConnection(con);
         }
         return false;
     }
 
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
     public boolean checkFidelity(Ticket ticket) {
         Connection con = null;
-        ResultSet resultSql = null;
+        Statement stmt = null;
         try {
-            con = dataBaseConfig.getConnection();
-            String vehicleRegNumber = ticket.getVehicleRegNumber();
-            String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ vehicleRegNumber;
-            Statement stmt = con.createStatement();
-            resultSql = stmt.executeQuery(request);
+        con = dataBaseConfig.getConnection();;
+        String vehicleRegNumber = ticket.getVehicleRegNumber();
+        String request = "SELECT VEHICLE_REG_NUMBER FROM prod.ticket WHERE VEHICLE_REG_NUMBER = "+ vehicleRegNumber;
+        stmt = con.createStatement();
+        ResultSet resultSql= stmt.executeQuery(request);
             if (resultSql != null) {
                 return true;
             }
         } catch (Exception ex) {
             logger.error("Error check ticket fidelity",ex);
         } finally {
+            try{
+                assert stmt != null;
+                stmt.close();
+            }catch (SQLException throwables){
+                throwables.printStackTrace();
+            }
             dataBaseConfig.closeConnection(con);
         }
         return false;
